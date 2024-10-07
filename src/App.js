@@ -1,5 +1,5 @@
 import "./App.css";
-import ThreeScene from "./ThreeScene";
+import ThreeScene from "./components/ThreeScene";
 
 function App() {
   return (
