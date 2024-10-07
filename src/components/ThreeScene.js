@@ -1,35 +1,11 @@
 import React, { useRef, useState } from "react";
-import { Canvas, useThree } from "@react-three/fiber";
-import { Html, OrbitControls, PerspectiveCamera } from "@react-three/drei";
+import { Canvas } from "@react-three/fiber";
+import { Html, PerspectiveCamera } from "@react-three/drei";
 import { Background } from "./Background.js";
 import { VideoScreen } from "./VideoScreen.js";
 import { NavigationItems } from "./NavigationItems.js";
 import config from "../configs/navigationItems.json";
-
-const CameraController = ({ orbitControlsEnabled }) => {
-  const { camera, set } = useThree();
-  const controlsRef = useRef();
-
-  React.useEffect(() => {
-    set({ controls: controlsRef.current });
-  }, [set]);
-
-  return (
-    <OrbitControls
-      ref={controlsRef}
-      camera={camera}
-      enablePan={orbitControlsEnabled}
-      enableZoom={orbitControlsEnabled}
-      enableRotate={orbitControlsEnabled}
-      minPolarAngle={0}
-      maxPolarAngle={Math.PI}
-      minAzimuthAngle={-Infinity}
-      maxAzimuthAngle={Infinity}
-      minDistance={5}
-      maxDistance={100}
-    />
-  );
-};
+import { CameraController } from "./CameraController.js";
 
 const Threescene = () => {
   const [orbitControlsEnabled, setOrbitControlsEnabled] = useState(true);

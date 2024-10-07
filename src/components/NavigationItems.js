@@ -14,33 +14,17 @@ export const NavigationItems = ({ setOrbitControlsEnabled }) => {
   const handleClick = (item) => {
     setOrbitControlsEnabled(false);
 
+    // Calculate the new camera position in front of the screen
     const screenPosition = new THREE.Vector3(...item.screenPosition);
     const screenRotation = new THREE.Euler(...item.screenRotation);
-
-    // Calculate a position slightly in front of the screen
     const offset = new THREE.Vector3(0, 0, 5).applyEuler(screenRotation);
     const cameraPosition = screenPosition.clone().add(offset);
-
-    // Calculate the camera rotation
-    const cameraRotation = new THREE.Euler(
-      screenRotation.x,
-      screenRotation.y + Math.PI, // Rotate 180 degrees to face the screen
-      screenRotation.z
-    );
 
     gsap.to(camera.position, {
       duration: 1.5,
       x: cameraPosition.x,
       y: cameraPosition.y,
       z: cameraPosition.z,
-      onUpdate: () => camera.updateProjectionMatrix(),
-    });
-
-    gsap.to(camera.rotation, {
-      duration: 1.5,
-      x: cameraRotation.x,
-      y: cameraRotation.y,
-      z: cameraRotation.z,
       onUpdate: () => camera.updateProjectionMatrix(),
       onComplete: () => setOrbitControlsEnabled(true),
     });
