@@ -1,10 +1,10 @@
 import "./App.css";
-import ThreeScene from "./components/ThreeScene";
+import HomeScreen from "./components/HomeScreen";
 
 function App() {
   return (
     <div className="App">
-      <ThreeScene />
+      <HomeScreen />
     </div>
   );
 }
