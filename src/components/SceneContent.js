@@ -27,7 +27,7 @@ const SceneContent = ({ setNavigationItemClicked, openDisplayMenus }) => {
       <VideoScreen
         position={[10, 5, -10]}
         rotation={[0, -Math.PI / 6, 0]}
-        videoId="UUnvTritYtk"
+        videoId="_dtel_5Mt8o&"
       />
 
       <Html position={[0, 2, 0]} transform>
