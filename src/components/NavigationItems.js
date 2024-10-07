@@ -1,6 +1,7 @@
 import React from "react";
 import { Sphere, Html, useTexture } from "@react-three/drei";
 import * as THREE from "three";
+import config from "../configs/navigationItems.json";
 
 export const NavigationItems = () => {
   const envMap = useTexture("/asphalt_04_diff_1k.jpg");
@@ -8,21 +9,19 @@ export const NavigationItems = () => {
 
   return (
     <>
-      {[...Array(5)].map((_, i) => (
+      {config.items.map((item) => (
         <Sphere
-          key={i}
+          key={item.id}
           args={[1.5, 30, 30]}
-          position={[-10 + i * 5, -4.375, -0.5]}
+          position={item.spherePosition}
         >
           <meshPhongMaterial
-            // color="#E5E4E2"
-            // specular="#FFFFFF"
             shininess={100}
             envMap={envMap}
             reflectivity={0.9}
           />
           <Html
-            position={[0, 0, 0]} // Moved slightly in front of the sphere
+            position={[0, 0, 0]}
             center
             distanceFactor={10}
             zIndexRange={[100, 0]}
@@ -40,7 +39,7 @@ export const NavigationItems = () => {
                 alignItems: "center",
               }}
             >
-              Item {i + 1}
+              {item.title}
             </div>
           </Html>
         </Sphere>
