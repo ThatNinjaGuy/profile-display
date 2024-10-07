@@ -1,28 +1,42 @@
 import React from "react";
 import { Sphere, Html, useTexture } from "@react-three/drei";
 import * as THREE from "three";
+import { useThree } from "@react-three/fiber";
+import config from "../configs/navigationItems.json";
+import { moveCamera } from "./CameraController";
 
-export const NavigationItems = () => {
+export const NavigationItems = ({
+  setNavigationItemClicked,
+  openDisplayMenus,
+}) => {
   const envMap = useTexture("/asphalt_04_diff_1k.jpg");
   envMap.mapping = THREE.EquirectangularReflectionMapping;
 
+  const { camera } = useThree();
+
+  const handleClick = (item) => {
+    setNavigationItemClicked(true);
+    moveCamera(camera, item.screenPosition, item.screenRotation, () =>
+      openDisplayMenus(true)
+    );
+  };
+
   return (
     <>
-      {[...Array(5)].map((_, i) => (
+      {config.items.map((item) => (
         <Sphere
-          key={i}
+          key={item.id}
           args={[1.5, 30, 30]}
-          position={[-10 + i * 5, -4.375, -0.5]}
+          position={item.spherePosition}
+          onClick={() => handleClick(item)}
         >
           <meshPhongMaterial
-            // color="#E5E4E2"
-            // specular="#FFFFFF"
             shininess={100}
             envMap={envMap}
             reflectivity={0.9}
           />
           <Html
-            position={[0, 0, 0]} // Moved slightly in front of the sphere
+            position={[0, 0, 0]}
             center
             distanceFactor={10}
             zIndexRange={[100, 0]}
@@ -38,9 +52,10 @@ export const NavigationItems = () => {
                 display: "flex",
                 justifyContent: "center",
                 alignItems: "center",
+                cursor: "pointer",
               }}
             >
-              Item {i + 1}
+              {item.title}
             </div>
           </Html>
         </Sphere>
