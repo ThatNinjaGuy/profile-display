@@ -1,6 +1,6 @@
 import React, { useRef, useState } from "react";
 import { Canvas, useFrame } from "@react-three/fiber";
-import { Sphere, Html } from "@react-three/drei";
+import { Sphere, Html, useTexture } from "@react-three/drei";
 
 const VideoScreen = ({ position, rotation, videoId }) => {
   const meshRef = useRef();
@@ -19,14 +19,13 @@ const VideoScreen = ({ position, rotation, videoId }) => {
       onPointerOver={() => setHovered(true)}
       onPointerOut={() => setHovered(false)}
     >
-      <boxGeometry args={[1.875, 1.5625, 0.15625]} />{" "}
-      {/* Scaled by 1.5625 (1.25 * 1.25) */}
+      <boxGeometry args={[1.875, 1.5625, 0.15625]} />
       <meshStandardMaterial color={hovered ? "red" : "blue"} />
       <Html
         transform
         style={{
-          width: "300px", // Scaled width (240px * 1.25)
-          height: "225px", // Scaled height (180px * 1.25)
+          width: "300px",
+          height: "225px",
           backgroundColor: "black",
           color: "white",
           display: "flex",
@@ -53,41 +52,66 @@ const VideoScreen = ({ position, rotation, videoId }) => {
   );
 };
 
+const Background = () => {
+  const backgroundTexture = useTexture("/backgroundImage.png");
+  return (
+    <mesh scale={[100, 100, 1]} position={[0, 0, -5]}>
+      <planeGeometry />
+      <meshBasicMaterial map={backgroundTexture} />
+    </mesh>
+  );
+};
+
+const NavigationItems = () => {
+  return (
+    <>
+      {[...Array(5)].map((_, i) => (
+        <Sphere
+          key={i}
+          args={[0.625, 30, 30]}
+          position={[-5 + i * 2.5, -4.375, -0.5]} // Adjusted z-position
+        >
+          <meshStandardMaterial color="blue" />
+        </Sphere>
+      ))}
+    </>
+  );
+};
+
 const Threescene = () => {
   return (
     <Canvas
-      style={{ height: "100vh", width: "100vw", background: "black" }}
-      camera={{ position: [0, 0, 12], fov: 60 }} // Adjusted camera position for better fit
+      style={{ height: "100vh", width: "100vw" }}
+      camera={{ position: [0, 0, 12], fov: 60 }}
     >
+      {/* Background */}
+      <Background />
+
       {/* Left Screen */}
       <VideoScreen
-        position={[-5, 0.5, -2]} // Increased distance from center
+        position={[-7.5, 0.5, -2]}
         rotation={[0, Math.PI / 6, 0]}
         videoId="UUnvTritYtk"
       />
 
       {/* Right Screen */}
       <VideoScreen
-        position={[5, 0.5, -2]} // Increased distance from center
+        position={[7.5, 0.5, -2]}
         rotation={[0, -Math.PI / 6, 0]}
         videoId="UUnvTritYtk"
       />
 
-      {/* Enlarged Profile Image Placeholder */}
-      <Sphere args={[1.125, 32, 32]} position={[0, -0.5, -1]}>
-        <meshStandardMaterial color="green" />
-      </Sphere>
+      {/* Profile Image */}
+      <Html position={[0, -0.5, -1]} transform>
+        <img
+          src="/profileImage.jpeg"
+          alt="Profile"
+          style={{ borderRadius: "50%", width: "150px", height: "150px" }}
+        />
+      </Html>
 
-      {/* Enlarged Navigation Icons */}
-      {[...Array(5)].map((_, i) => (
-        <Sphere
-          key={i}
-          args={[0.3, 16, 16]}
-          position={[-3 + i * 1.5, -3.5, -1]}
-        >
-          <meshStandardMaterial color="blue" />
-        </Sphere>
-      ))}
+      {/* Navigation Items */}
+      <NavigationItems />
 
       {/* Lighting */}
       <ambientLight intensity={0.5} />
