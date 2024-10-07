@@ -1,28 +1,49 @@
-import React from "react";
-import { Canvas } from "@react-three/fiber";
-import { Html, OrbitControls } from "@react-three/drei";
+import React, { useRef, useState } from "react";
+import { Canvas, useThree } from "@react-three/fiber";
+import { Html, OrbitControls, PerspectiveCamera } from "@react-three/drei";
 import { Background } from "./Background.js";
 import { VideoScreen } from "./VideoScreen.js";
 import { NavigationItems } from "./NavigationItems.js";
 import config from "../configs/navigationItems.json";
 
-const Threescene = () => {
+const CameraController = ({ orbitControlsEnabled }) => {
+  const { camera, set } = useThree();
+  const controlsRef = useRef();
+
+  React.useEffect(() => {
+    set({ controls: controlsRef.current });
+  }, [set]);
+
   return (
-    <Canvas
-      style={{ height: "100vh", width: "100vw" }}
-      camera={{ position: [0, 0, 15], fov: 60 }}
-    >
-      <OrbitControls
-        enablePan={true}
-        enableZoom={true}
-        enableRotate={true}
-        minPolarAngle={0}
-        maxPolarAngle={Math.PI}
-        minAzimuthAngle={-Math.PI / 2}
-        maxAzimuthAngle={Math.PI / 2}
-        minDistance={5}
-        maxDistance={100}
+    <OrbitControls
+      ref={controlsRef}
+      camera={camera}
+      enablePan={orbitControlsEnabled}
+      enableZoom={orbitControlsEnabled}
+      enableRotate={orbitControlsEnabled}
+      minPolarAngle={0}
+      maxPolarAngle={Math.PI}
+      minAzimuthAngle={-Infinity}
+      maxAzimuthAngle={Infinity}
+      minDistance={5}
+      maxDistance={100}
+    />
+  );
+};
+
+const Threescene = () => {
+  const [orbitControlsEnabled, setOrbitControlsEnabled] = useState(true);
+  const cameraRef = useRef();
+
+  return (
+    <Canvas style={{ height: "100vh", width: "100vw" }}>
+      <PerspectiveCamera
+        makeDefault
+        ref={cameraRef}
+        position={[0, 0, 15]}
+        fov={60}
       />
+      <CameraController orbitControlsEnabled={orbitControlsEnabled} />
 
       <Background />
 
@@ -57,7 +78,10 @@ const Threescene = () => {
         />
       </Html>
 
-      <NavigationItems />
+      <NavigationItems
+        setOrbitControlsEnabled={setOrbitControlsEnabled}
+        cameraRef={cameraRef}
+      />
 
       {/* Adjusted lighting */}
       <ambientLight intensity={0.5} />
