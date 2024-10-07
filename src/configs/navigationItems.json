@@ -5,7 +5,7 @@
       "title": "Projects",
       "videoId": "UUnvTritYtk",
       "spherePosition": [-10, -4.375, -0.5],
-      "screenPosition": [-40, 15, -40],
+      "screenPosition": [-40, 25, -40],
       "screenRotation": [0, 0.7853981633974483, 0]
     },
     {
@@ -13,7 +13,7 @@
       "title": "Skills",
       "videoId": "UUnvTritYtk",
       "spherePosition": [-5, -4.375, -0.5],
-      "screenPosition": [-20, 15, -45],
+      "screenPosition": [-20, 25, -45],
       "screenRotation": [0, 0.39269908169872414, 0]
     },
     {
@@ -21,7 +21,7 @@
       "title": "Experience",
       "videoId": "UUnvTritYtk",
       "spherePosition": [0, -4.375, -0.5],
-      "screenPosition": [0, 15, -47],
+      "screenPosition": [0, 25, -47],
       "screenRotation": [0, 0, 0]
     },
     {
@@ -29,7 +29,7 @@
       "title": "Education",
       "videoId": "UUnvTritYtk",
       "spherePosition": [5, -4.375, -0.5],
-      "screenPosition": [20, 15, -45],
+      "screenPosition": [20, 25, -45],
       "screenRotation": [0, -0.39269908169872414, 0]
     },
     {
@@ -37,7 +37,7 @@
       "title": "Contact",
       "videoId": "UUnvTritYtk",
       "spherePosition": [10, -4.375, -0.5],
-      "screenPosition": [40, 15, -40],
+      "screenPosition": [40, 25, -40],
       "screenRotation": [0, -0.7853981633974483, 0]
     }
   ]

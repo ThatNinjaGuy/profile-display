@@ -10,7 +10,7 @@ const Threescene = () => {
   return (
     <Canvas
       style={{ height: "100vh", width: "100vw" }}
-      camera={{ position: [0, 5, 30], fov: 75 }}
+      camera={{ position: [0, 0, 15], fov: 60 }}
     >
       <OrbitControls
         enablePan={true}
