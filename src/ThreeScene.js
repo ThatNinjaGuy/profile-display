@@ -1,111 +1,99 @@
-import React, { useEffect, useRef } from "react";
-import * as THREE from "three";
-import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
+import React, { useRef, useState } from "react";
+import { Canvas, useFrame } from "@react-three/fiber";
+import { Sphere, Html } from "@react-three/drei";
 
-const ThreeScene = () => {
-  const mountRef = useRef(null);
+const VideoScreen = ({ position, rotation, videoId }) => {
+  const meshRef = useRef();
+  const [hovered, setHovered] = useState(false);
 
-  useEffect(() => {
-    const mountNode = mountRef.current;
+  useFrame(() => {
+    if (meshRef.current) {
+      meshRef.current.rotation.y = rotation[1];
+    }
+  });
 
-    // Scene setup
-    const scene = new THREE.Scene();
-    scene.background = new THREE.Color(0x111111); // Dark gray background
-    const camera = new THREE.PerspectiveCamera(
-      75,
-      window.innerWidth / window.innerHeight,
-      0.1,
-      1000
-    );
-    const renderer = new THREE.WebGLRenderer();
-    renderer.setSize(window.innerWidth, window.innerHeight);
-    mountNode.appendChild(renderer.domElement);
-
-    // Starry night background
-    const loader = new THREE.TextureLoader();
-    loader.load(
-      "starryNight.avif",
-      (texture) => {
-        console.log("Background texture loaded successfully");
-        scene.background = texture;
-      },
-      undefined,
-      (error) => {
-        console.error("Error loading background texture:", error);
-      }
-    );
-
-    // Central image
-    const imageGeometry = new THREE.PlaneGeometry(5, 5);
-    loader.load(
-      "/profileImage.jpeg",
-      (texture) => {
-        console.log("Profile image loaded successfully");
-        const imageMaterial = new THREE.MeshBasicMaterial({
-          map: texture,
-          side: THREE.DoubleSide,
-          transparent: true,
-        });
-        const imageMesh = new THREE.Mesh(imageGeometry, imageMaterial);
-        scene.add(imageMesh);
-      },
-      undefined,
-      (error) => {
-        console.error("Error loading profile image:", error);
-      }
-    );
-
-    // Add lighting
-    const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
-    scene.add(ambientLight);
-    const directionalLight = new THREE.DirectionalLight(0xffffff, 0.5);
-    directionalLight.position.set(0, 1, 1);
-    scene.add(directionalLight);
-
-    // Camera position
-    camera.position.z = 10;
-
-    // Orbit controls for navigation
-    const controls = new OrbitControls(camera, renderer.domElement);
-    controls.enableDamping = true;
-    controls.dampingFactor = 0.05;
-
-    // Animation loop
-    const animate = () => {
-      requestAnimationFrame(animate);
-
-      // Rotate the image (if it exists)
-      const imageMesh = scene.children.find(
-        (child) =>
-          child instanceof THREE.Mesh &&
-          child.geometry instanceof THREE.PlaneGeometry
-      );
-      if (imageMesh) {
-        imageMesh.rotation.y += 0.005;
-      }
-
-      controls.update();
-      renderer.render(scene, camera);
-    };
-
-    animate();
-
-    // Handle window resize
-    const handleResize = () => {
-      camera.aspect = window.innerWidth / window.innerHeight;
-      camera.updateProjectionMatrix();
-      renderer.setSize(window.innerWidth, window.innerHeight);
-    };
-    window.addEventListener("resize", handleResize);
-
-    // Cleanup function
-    return () => {
-      window.removeEventListener("resize", handleResize);
-      mountNode.removeChild(renderer.domElement);
-    };
-  }, []);
-
-  return <div ref={mountRef} />;
+  return (
+    <mesh
+      position={position}
+      ref={meshRef}
+      onPointerOver={() => setHovered(true)}
+      onPointerOut={() => setHovered(false)}
+    >
+      <boxGeometry args={[1.875, 1.5625, 0.15625]} />{" "}
+      {/* Scaled by 1.5625 (1.25 * 1.25) */}
+      <meshStandardMaterial color={hovered ? "red" : "blue"} />
+      <Html
+        transform
+        style={{
+          width: "300px", // Scaled width (240px * 1.25)
+          height: "225px", // Scaled height (180px * 1.25)
+          backgroundColor: "black",
+          color: "white",
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          zIndex: 1,
+        }}
+      >
+        {videoId ? (
+          <iframe
+            width="100%"
+            height="100%"
+            src={`https://www.youtube-nocookie.com/embed/${videoId}?autoplay=1&mute=1&controls=1&loop=1&playlist=${videoId}`}
+            title="YouTube video player"
+            frameBorder="0"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allowFullScreen
+          ></iframe>
+        ) : (
+          <div>Loading video...</div>
+        )}
+      </Html>
+    </mesh>
+  );
 };
 
-export default ThreeScene;
+const Threescene = () => {
+  return (
+    <Canvas
+      style={{ height: "100vh", width: "100vw", background: "black" }}
+      camera={{ position: [0, 0, 12], fov: 60 }} // Adjusted camera position for better fit
+    >
+      {/* Left Screen */}
+      <VideoScreen
+        position={[-5, 0.5, -2]} // Increased distance from center
+        rotation={[0, Math.PI / 6, 0]}
+        videoId="UUnvTritYtk"
+      />
+
+      {/* Right Screen */}
+      <VideoScreen
+        position={[5, 0.5, -2]} // Increased distance from center
+        rotation={[0, -Math.PI / 6, 0]}
+        videoId="UUnvTritYtk"
+      />
+
+      {/* Enlarged Profile Image Placeholder */}
+      <Sphere args={[1.125, 32, 32]} position={[0, -0.5, -1]}>
+        <meshStandardMaterial color="green" />
+      </Sphere>
+
+      {/* Enlarged Navigation Icons */}
+      {[...Array(5)].map((_, i) => (
+        <Sphere
+          key={i}
+          args={[0.3, 16, 16]}
+          position={[-3 + i * 1.5, -3.5, -1]}
+        >
+          <meshStandardMaterial color="blue" />
+        </Sphere>
+      ))}
+
+      {/* Lighting */}
+      <ambientLight intensity={0.5} />
+      <pointLight position={[10, 10, 10]} intensity={0.8} />
+    </Canvas>
+  );
+};
+
+export default Threescene;
