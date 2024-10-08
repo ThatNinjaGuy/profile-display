@@ -3,7 +3,7 @@ import * as THREE from "three";
 
 export const Background = () => {
   const backgroundTexture = useTexture("./backgroundImage.png");
-  const moonTexture = useTexture("./backgroundImage.png");
+  const moonTexture = useTexture("./moonLand.png");
   return (
     <>
       {/* Full sphere background */}
