@@ -6,9 +6,9 @@ export const Background = () => {
   const moonTexture = useTexture("./backgroundImage.png");
   return (
     <>
-      {/* Vertical background */}
-      <mesh scale={[1, 1, 1]} position={[0, 0, -50]}>
-        <cylinderGeometry args={[100, 100, 200, 32, 1, true]} />
+      {/* Full sphere background */}
+      <mesh scale={[1, 1, 1]} position={[0, 0, 0]}>
+        <sphereGeometry args={[100, 32, 32]} />
         <meshBasicMaterial map={backgroundTexture} side={THREE.BackSide} />
       </mesh>
 
